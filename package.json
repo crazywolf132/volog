@@ -1,0 +1,35 @@
+{
+  "name": "volog",
+  "version": "1.0.0",
+  "description": "Simple, light and beautiful logger",
+  "main": "dist/index.js",
+  "types": "dist/index.d.ts",
+  "files": [
+    "dist"
+  ],
+  "scripts": {
+    "build": "tsup"
+  },
+  "keywords": [
+    "logger",
+    "log",
+    "sexy",
+    "beautiful",
+    "small",
+    "lightweight"
+  ],
+  "author": "crazywolf132",
+  "license": "ISC",
+  "devDependencies": {
+    "terser": "^5.26.0",
+    "tsup": "^8.0.1",
+    "typescript": "^5.3.3"
+  },
+  "dependencies": {
+    "chalk": "4.1.2"
+  },
+  "repository": {
+    "url": "https://github.com/crazywolf132/volog"
+  },
+  "homepage": "https://github.com/crazywolf132/volog"
+}
