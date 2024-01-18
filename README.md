@@ -3,6 +3,8 @@ _**"Empower Your Insights, Let Your Logs Soar with VOLOG"**_
 
 VOLOG - where your application's logs don't just tell a story, they take flight, offering a higher perspective on your code's journey.
 
+<img src="https://raw.githubusercontent.com/crazywolf132/volog/main/.github/app.gif" alt="Made with VOLOG" />
+
 ### Installation
 To start using VOLOG, install it in your project:
 
