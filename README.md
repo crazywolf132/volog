@@ -4,7 +4,6 @@ _**"Empower Your Insights, Let Your Logs Soar with VOLOG"**_
 VOLOG - where your application's logs don't just tell a story, they take flight, offering a higher perspective on your code's journey.
 
 ### Installation
-
 To start using VOLOG, install it in your project:
 
 ```bash
@@ -43,30 +42,95 @@ log.error('Database error', 'code', 500, 'retrying', false);
 
 In this approach, each additional argument after the first (the message) is treated as part of the extras. VOLOG will group these extras and display them alongside the log message.
 
+### Customizing Logs with Settings
+
+VOLOG allows customization of logging behavior through the `volog.settings` system. Here are the available settings along with their default values:
+
+#### _**showTime**_ (default: `true`): Display timestamp with each log message.
+
+```javascript
+log.settings.showTime = true; // Enables timestamp in logs
+```
+
+#### _**scope**_: Define a scope or context for your log messages.
+
+```javascript
+log.settings.scope = 'AuthenticationModule'; // Sets a specific scope
+```
+
+#### _**formatArguments**_ (default: `true``): Toggle formatting for additional arguments.
+
+```javascript
+log.settings.formatArguments = true; // Enables formatting for extras
+```
+
+
+#### _**argsFormatter**_: Provide a custom formatter for additional arguments. This function receives three parameters:
+
+- `arg`: The current argument from the log method call.
+- `idx`: The index (position) of the argument in the log method call.
+- `chalk`: A copy of the Chalk library, allowing you to apply text styles without needing to install Chalk separately.
+
+```javascript
+log.settings.argsFormatter = (arg, idx, chalk) => chalk.green(`(${idx}): ${arg}`);
+```
+
+#### _**colorEntireRow**_ (default: `false`): Color the entire log row instead of just the log level.
+
+```javascript
+log.settings.colorEntireRow = true;
+```
+
+#### _**colorRowLevels**_ (default: `['debug', 'info', 'warn', 'error', 'fatal']`): Specify which log levels should have colored rows.
+
+```javascript
+log.settings.colorRowLevels = ['error', 'fatal']; // Only 'error' and 'fatal' logs will have colored rows
+```
+
+#### _**customColorMap**_: Define custom colors for different log levels.
+
+```javascript
+log.settings.customColorMap = {
+  debug: 'blue',
+  info: '\u001b[33m', // ANSI color code
+  warn: (chalk) => chalk.bgYellow.black, // Using chalk function
+  error: 91, // ANSI color number
+  fatal: 'magenta'
+};
+```
+
 ### Log Output
 
 When a log function is called, VOLOG generates an output in the console which includes:
 
-- A timestamp.
+- A timestamp (if enabled).
+- A scope (if defined).
 - A colored label indicating the log level (DEBUG, INFO, WARN, ERROR, FATAL).
 - The log message.
 - Any additional contextual information provided.
 
-### Example Usage
+### Scoped Settings
 
-Here's an example showcasing how VOLOG can be used in a real-world scenario:
+Settings in VOLOG are scoped to each import of the library. This means that you can have different settings for different areas of your code. For example, you might have different log settings for authentication and data processing modules.
+
+If you want to maintain consistent settings across multiple files, it is recommended to create a wrapper for VOLOG. This wrapper can set up the desired settings and be imported wherever you need logging.
+
+### Example Usage with Scoped Settings
 
 ```javascript
+// logWrapper.js
 import log from 'volog';
 
-// Log server start-up information
+log.settings.showTime = true;
+log.settings.scope = 'GlobalScope';
+// Other settings...
+
+export default log;
+
+// In other files
+import log from './logWrapper';
+
 log.info('Server started', 'port', 3000);
-
-// Warning about high memory usage
-log.warn('Memory usage warning', 'currentUsage', '85%', 'maxAllowed', '90%');
-
-// Error in database operation
-log.error('Database connection failed', 'errorCode', 500, 'retryAttempt', 2);
 ```
 
 Each of these log statements will produce a structured, color-coded output in the console, making it easier to track application behavior and troubleshoot issues effectively.
