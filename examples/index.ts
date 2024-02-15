@@ -1,4 +1,4 @@
-import log from '../../dist';
+import log from '../dist';
 
 function startOven(degree: number): void {
     log.debug("Starting oven", "temperature", degree)
