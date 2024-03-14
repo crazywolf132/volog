@@ -1,5 +1,5 @@
-import kleur from "kleur";
 import { format } from "date-fns";
+import kleur from "kleur";
 import { inspect } from "node:util";
 
 // Define log levels
@@ -44,7 +44,7 @@ interface StandardLogOptions {
 
 // Formatter interface
 interface Formatter {
-  format(level: Level, msg: unknown, keyvals: unknown[]): string;
+  format(level: Level, msg: unknown, keyvals: unknown[], bypass: boolean): string;
 }
 
 // Text Formatter
@@ -75,7 +75,7 @@ export class TextFormatter implements Formatter {
     this.dimKeys = options?.dimKeys ?? true;
   }
 
-  format(level: Level, msg: unknown, keyvals: unknown[]): string {
+  format(level: Level, msg: unknown, keyvals: unknown[], bypass: boolean): string {
     let message = "";
     if (this.reportTimestamp) {
       const timestamp =
@@ -95,7 +95,8 @@ export class TextFormatter implements Formatter {
         ? kleur[levelColor](levelName)
         : levelName;
 
-    message += formattedLevel + " ";
+    if (!bypass)
+      message += formattedLevel + " ";
 
     if (this.prefix) {
       message += this.disableColors
@@ -168,21 +169,6 @@ export class JSONFormatter implements Formatter {
   }
 }
 
-// Custom timestamp formatter
-// function customTimestampFormatter(date: Date, formatString: string): string {
-//   const year = date.getFullYear();
-//   const month = String(date.getMonth() + 1).padStart(2, "0");
-//   const day = String(date.getDate()).padStart(2, "0");
-//   const hours = String(date.getHours()).padStart(2, "0");
-//   const minutes = String(date.getMinutes()).padStart(2, "0");
-//   const seconds = String(date.getSeconds()).padStart(2, "0");
-
-//   return `${year}/${month}/${day} ${hours}:${minutes}:${seconds}`;
-// }
-
-// Caller formatter type
-type CallerFormatter = (file: string, line: number, fn: string) => string;
-
 function flatten(...args: unknown[]): unknown[] {
   const result: unknown[] = [];
 
@@ -205,7 +191,8 @@ function flatten(...args: unknown[]): unknown[] {
   }
 
   args.forEach(flatten_internal);
-  return result;
+  // Removing the undefined values
+  return result.filter(Boolean);
 }
 
 // The logger class
@@ -310,7 +297,7 @@ class Logger {
 
     // Build the log message
     const message = this.formatter
-      .format(level, msg, [...this.fields, ...keyvals])
+      .format(level, msg, [...this.fields, ...keyvals], bypass)
       .trim();
 
     // Output the log message
