@@ -12,7 +12,7 @@ export enum Level {
   Fatal,
 }
 
-const DEFAULT_LEVEL_COLORS: { [level in Level]?: string } = {
+export const DEFAULT_LEVEL_COLORS: { [level in Level]?: string } = {
   [Level.Debug]: "cyan",
   [Level.Info]: "blue",
   [Level.Warn]: "yellow",
@@ -21,7 +21,7 @@ const DEFAULT_LEVEL_COLORS: { [level in Level]?: string } = {
 };
 
 // Options for the logger
-interface Options<T extends object = {}> {
+export interface Options<T extends object = {}> {
   level?: Level;
   prefix?: string;
   reportTimestamp?: boolean;
